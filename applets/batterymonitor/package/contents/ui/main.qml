@@ -79,6 +79,7 @@ PlasmoidItem {
     readonly property var profiles: pmSource.data["Power Profiles"] ? (pmSource.data["Power Profiles"]["Profiles"] || []) : []
     readonly property bool isInBalancedMode: actuallyActiveProfile === "balanced"
     property bool isManuallyInPerformanceMode: false // to be set on power profile requested through the applet
+    property bool isManuallyInBalancedMode: false // to be set on power profile requested through the applet
     property bool isManuallyInPowerSaveMode: false // to be set on power profile requested through the applet
     readonly property bool isSomehowInPerformanceMode: actuallyActiveProfile === "performance"// Don't care about whether it was manually one or due to holds
     readonly property bool isSomehowInPowerSaveMode: actuallyActiveProfile === "power-saver" // Don't care about whether it was manually one or due to holds
@@ -177,6 +178,7 @@ PlasmoidItem {
                 powerProfileError.sendEvent();
             }
             batterymonitor.isManuallyInPerformanceMode = profile == "performance";
+            batterymonitor.isManuallyInBalancedMode = profile == "balanced";
             batterymonitor.isManuallyInPowerSaveMode = profile == "power-saver";
         });
     }
@@ -214,7 +216,7 @@ PlasmoidItem {
             return PlasmaCore.Types.ActiveStatus;
         }
 
-        if (isManuallyInPerformanceMode || isManuallyInPowerSaveMode || isHeldOnPerformanceMode || isHeldOnPowerSaveMode) {
+        if (isManuallyInPerformanceMode || isManuallyInPowerSaveMode || isManuallyInBalancedMode || isHeldOnPerformanceMode || isHeldOnPowerSaveMode) {
             return PlasmaCore.Types.ActiveStatus;
         }
 
@@ -313,6 +315,7 @@ PlasmoidItem {
         hasBatteries: batterymonitor.hasBatteries
         batteries: batterymonitor.batteries
         isManuallyInPerformanceMode: batterymonitor.isHeldOnPerformanceMode || batterymonitor.isManuallyInPerformanceMode
+        isManuallyInBalancedMode: batterymonitor.isManuallyInBalancedMode
         isManuallyInPowerSaveMode: batterymonitor.isHeldOnPowerSaveMode || batterymonitor.isManuallyInPowerSaveMode
         isManuallyInhibited: batterymonitor.powermanagementDisabled
         isSomehowFullyCharged: batterymonitor.isSomehowFullyCharged

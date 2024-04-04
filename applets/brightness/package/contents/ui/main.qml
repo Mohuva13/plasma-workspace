@@ -86,17 +86,18 @@ PlasmoidItem {
             if (!nightLightMonitor.running) {
                 parts.push(i18nc("Status", "Night Light off"));
             } else if (nightLightMonitor.currentTemperature != 6500) {
-                if (nightLightMonitor.currentTemperature != nightLightMonitor.targetTemperature) {
-                    if (nightLightMonitor.daylight) {
-                        parts.push(i18nc("Status", "Night Light in morning transition"));
-                    } else {
-                        parts.push(i18nc("Status", "Night Light in evening transition"));
-                    }
-                } else {
+                if (nightLightMonitor.currentTemperature == nightLightMonitor.targetTemperature) {
                     if (nightLightMonitor.daylight) {
                         parts.push(i18nc("Status", "Night Light at day color temperature"));
                     } else {
                         parts.push(i18nc("Status", "Night Light at night color temperature"));
+                    }
+                } else {
+                    const endTime = new Date(nightLightMonitor.currentTransitionEndTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                    if (nightLightMonitor.daylight) {
+                        parts.push(i18nc("Status; placeholder is a time", "Night Light in morning transition (complete by %1)", endTime));
+                    } else {
+                        parts.push(i18nc("Status; placeholder is a time", "Night Light in evening transition (complete by %1)", endTime));
                     }
                 }
             }
@@ -108,12 +109,13 @@ PlasmoidItem {
     toolTipSubText: {
         const parts = [];
         if (nightLightMonitor.enabled)
-            if (nightLightMonitor.currentTemperature != nightLightMonitor.targetTemperature) {
-                const endTime = new Date(nightLightMonitor.currentTransitionEndTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                parts.push(i18nc("Status; placeholder is a time", "Night Light transition completed by %1", endTime));
-            } else if (nightLightMonitor.currentTemperature == 6500) {
+            if (nightLightMonitor.currentTemperature == nightLightMonitor.targetTemperature) {
                 const startTime = new Date(nightLightMonitor.scheduledTransitionStartTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                parts.push(i18nc("Status; placeholder is a time", "Night Light transition scheduled for %1", startTime));
+                if (nightLightMonitor.daylight) {
+                    parts.push(i18nc("Status; placeholder is a time", "Night Light evening transition scheduled for %1", startTime));
+                } else {
+                    parts.push(i18nc("Status; placeholder is a time", "Night Light morning transition scheduled for %1", startTime));
+                }
             }
         if (screenBrightnessControl.isBrightnessAvailable) {
             parts.push(i18n("Scroll to adjust screen brightness"));

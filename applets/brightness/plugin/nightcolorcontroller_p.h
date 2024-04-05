@@ -6,15 +6,16 @@
 
 #pragma once
 
+#include "nightcolorcontroller.h"
 #include <QObject>
 
-class NightColorMonitorPrivate : public QObject
+class NightColorControllerPrivate : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NightColorMonitorPrivate(QObject *parent = nullptr);
-    ~NightColorMonitorPrivate() override;
+    explicit NightColorControllerPrivate(QObject *parent = nullptr);
+    ~NightColorControllerPrivate() override;
 
     int currentTemperature() const;
     int targetTemperature() const;
@@ -25,6 +26,7 @@ public:
     bool isAvailable() const;
     bool isEnabled() const;
     bool isRunning() const;
+    NightColorController::InhibitionState inhibitionState() const;
 Q_SIGNALS:
     void currentTemperatureChanged();
     void targetTemperatureChanged();
@@ -60,4 +62,7 @@ private:
     bool m_isAvailable = false;
     bool m_isEnabled = false;
     bool m_isRunning = false;
+    NightColorController::InhibitionState m_inhibitionState = NightColorController::Uninhibited;
+    uint m_inhibitCookie = 0;
+    bool m_pendingUninhibit = false;
 };

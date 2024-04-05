@@ -9,12 +9,12 @@
 #include <QObject>
 #include <qqmlregistration.h>
 
-class NightColorMonitorPrivate;
+class NightColorControllerPrivate;
 
 /**
  * The Monitor provides a way for monitoring the state of Night Color.
  */
-class NightColorMonitor : public QObject
+class NightColorController : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -64,9 +64,25 @@ class NightColorMonitor : public QObject
      */
     Q_PROPERTY(quint64 scheduledTransitionStartTime READ scheduledTransitionStartTime NOTIFY scheduledTransitionStartTimeChanged)
 
+    /**
+     * This property holds a value to indicate the current state of the inhibitor.
+     */
+    Q_PROPERTY(InhibitionState inhibitionState READ inhibitionState NOTIFY inhibitionStateChanged)
+
 public:
-    explicit NightColorMonitor(QObject *parent = nullptr);
-    ~NightColorMonitor() override;
+    explicit NightColorController(QObject *parent = nullptr);
+    ~NightColorController() override;
+
+    /**
+     * This enum type is used to specify the state of the inhibitor.
+     */
+    enum InhibitionState {
+        Inhibiting, ///< Night Color is being inhibited.
+        Inhibited, ///< Night Color is inhibited.
+        Uninhibiting, ///< Night Color is being uninhibited.
+        Uninhibited, ///< Night Color is uninhibited.
+    };
+    Q_ENUM(InhibitionState)
 
     /**
      * Returns @c true if Night Color is available; otherwise @c false.
@@ -113,6 +129,34 @@ public:
      */
     quint64 scheduledTransitionStartTime() const;
 
+    /**
+     * Returns the current state of the inhibitor.
+     */
+    InhibitionState inhibitionState() const;
+
+public Q_SLOTS:
+    /**
+     * Attempts to temporarily disable Night Color.
+     *
+     * After calling this method, the inhibitor will enter the Inhibiting state.
+     * Eventually, the inhibitor will enter the Inhibited state when the inhibition
+     * request has been processed successfully by the Night Color manager.
+     *
+     * This method does nothing if the inhibitor is in the Inhibited state.
+     */
+    void inhibit();
+
+    /**
+     * Attempts to undo the previous call to inhibit() method.
+     *
+     * After calling this method, the inhibitor will enter the Uninhibiting state.
+     * Eventually, the inhibitor will enter the Uninhibited state when the uninhibition
+     * request has been processed by the Night Color manager.
+     *
+     * This method does nothing if the inhibitor is in the Uninhibited state.
+     */
+    void uninhibit();
+
 Q_SIGNALS:
     /**
      * This signal is emitted when Night Color becomes (un)available.
@@ -158,7 +202,11 @@ Q_SIGNALS:
      * Emitted when the end time of the next color transition has changed.
      */
     void scheduledTransitionStartTimeChanged();
+    /**
+     * Emitted whenever the state of the inhibitor has changed.
+     */
+    void inhibitionStateChanged();
 
 private:
-    NightColorMonitorPrivate *d;
+    NightColorControllerPrivate *d;
 };

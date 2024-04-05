@@ -79,11 +79,10 @@ Kirigami.FormLayout {
 
                 QQC2.Button {
                     id: zoomInButton
-                    // HACK: using list-add and list-remove for more obvious/standard zoom icons till we change the Breeze ones
-                    // https://bugs.kde.org/show_bug.cgi?id=435671
+
                     text: i18n("Zoom in")
                     display: QQC2.AbstractButton.IconOnly
-                    icon.name: kcm.isIconThemeBreeze() ? "list-add" : "zoom-in"
+                    icon.name: "zoom-in-symbolic"
                     activeFocusOnTab: false
                     onClicked: {
                         if (mapRect.currentScale < 5) {
@@ -105,11 +104,10 @@ Kirigami.FormLayout {
 
                 QQC2.Button {
                     id: zoomOutButton
-                    // HACK: using list-add and list-remove for more obvious/standard zoom icons till we change the Breeze ones
-                    // https://bugs.kde.org/show_bug.cgi?id=435671
+
                     text: i18n("Zoom out")
                     display: QQC2.AbstractButton.IconOnly
-                    icon.name: kcm.isIconThemeBreeze() ? "list-remove" : "zoom-out"
+                    icon.name: "zoom-out-symbolic"
                     activeFocusOnTab: false
                     onClicked: {
                         if (mapRect.currentScale > 1) {

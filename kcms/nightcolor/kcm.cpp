@@ -24,8 +24,9 @@ KCMNightColor::KCMNightColor(QObject *parent, const KPluginMetaData &data)
     : KQuickManagedConfigModule(parent, data)
     , m_data(new NightColorData(this))
 {
-    qmlRegisterAnonymousType<NightColorSettings>("org.kde.private.kcms.nightcolor", 1);
-    qmlRegisterUncreatableMetaObject(ColorCorrect::staticMetaObject, "org.kde.private.kcms.nightcolor", 1, 0, "NightColorMode", "Error: only enums");
+    const auto uri = "org.kde.private.kcms.nightcolor";
+    qmlRegisterAnonymousType<NightColorSettings>(uri, 1);
+    qmlRegisterUncreatableMetaObject(ColorCorrect::staticMetaObject, uri, 1, 0, "NightColorMode", "Error: only enums");
 
     minDayTemp = nightColorSettings()->findItem("DayTemperature")->minValue().toInt();
     maxDayTemp = nightColorSettings()->findItem("DayTemperature")->maxValue().toInt();

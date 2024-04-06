@@ -4,10 +4,12 @@ set(plasma-apply-wallpaperimage_SRCS
     plasma-apply-wallpaperimage.cpp
 )
 add_executable(plasma-apply-wallpaperimage ${plasma-apply-wallpaperimage_SRCS})
+ecm_add_qml_module(plasma-apply-wallpaperimage URI org.kde.plasma.wallpaper.app)
 target_link_libraries(plasma-apply-wallpaperimage
-    Qt::Core
-    Qt::DBus
-    KF6::I18n
+    PRIVATE
+        Qt::Core
+        Qt::DBus
+        KF6::I18n
 )
 
 add_subdirectory(plugin)

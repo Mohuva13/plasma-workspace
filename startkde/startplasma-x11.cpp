@@ -24,6 +24,7 @@ int main(int argc, char **argv)
     qputenv("QT_NO_XDG_DESKTOP_PORTAL", QByteArrayLiteral("1"));
 
     QCoreApplication app(argc, argv);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.startplasma"));
 
     // Check if a Plasma session already is running and whether it's possible to connect to X
     switch (kCheckRunning()) {

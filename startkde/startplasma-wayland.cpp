@@ -15,6 +15,7 @@
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.startplasma"));
 
     createConfigDirectory();
     setupCursor(true);
